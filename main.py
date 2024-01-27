@@ -19,13 +19,16 @@ ROOM_NAME = "room"
 
 lock = Lock()
 
+
 @socketio.on('connect')
 def handle_connect():
     print('Client connected')
 
+
 @socketio.on('disconnect')
 def handle_disconnect():
     print('Client disconnected')
+
 
 @socketio.on('join_room')
 def handle_join_room(data):
@@ -35,12 +38,12 @@ def handle_join_room(data):
         join_room(room)
 
 
-
-async def handle_submit_result(ma_tin, ket_qua):
+async def handle_submit_result(ma_tin, ket_qua, openTime):
     try:
         data = {
             'ma_tin': ma_tin,
             'ket_qua': str(ket_qua),
+            'openTime': str(openTime),
             'action': 'luu_kq',
         }
 
@@ -61,6 +64,7 @@ async def handle_submit_result(ma_tin, ket_qua):
         # print("Submission successful:", response.text)
     except requests.RequestException as e:
         print(f"Error submitting result: {e}")
+
 
 async def generate_random_array(length, count):
     current_time = datetime.now()
@@ -107,11 +111,13 @@ async def generate_random_array(length, count):
             # Sinh ngẫu nhiên 12 kí tự số
             random_string = "".join(random.choice("0123456789")
                                     for _ in range(8))
-            random_string = ",".join([random_string[j:j+2] for j in range(0, len(random_string), 2)])
+            random_string = ",".join([random_string[j:j+2]
+                                     for j in range(0, len(random_string), 2)])
 
         else:
             # Sinh ngẫu nhiên 5 kí tự số
-            random_string = "".join(random.choice("0123456789")for _ in range(length))
+            random_string = "".join(random.choice("0123456789")
+                                    for _ in range(length))
 
         result_array.append(random_string)
 
@@ -124,10 +130,9 @@ async def generate_random_array(length, count):
     # Move the print statement outside the loop
     print(result)
 
-    #Lưu kết quả
+    # Lưu kết quả
 
-    await handle_submit_result('123', str(result_array))
-
+    await handle_submit_result('123', str(result_array), after_time.strftime("%Y-%m-%d %H:%M:%S"))
 
     # kiểm tra kết quả
 
@@ -143,12 +148,14 @@ async def background_task():
             socketio.emit('message_from_server', result, room=ROOM_NAME)
         await asyncio.sleep(75)
 
+
 def run_background_task():
     asyncio.run(background_task())
+
 
 if __name__ == '__main__':
     # Start the background task in a separate thread
     background_thread = Thread(target=run_background_task)
     background_thread.start()
 
-    socketio.run(app,host='0.0.0.0', debug=False, allow_unsafe_werkzeug=True)
+    socketio.run(app, host='0.0.0.0', debug=False, allow_unsafe_werkzeug=True)
