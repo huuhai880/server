@@ -12,7 +12,7 @@ services:
 
   web:
     image: test-web:latest
-    build: ./web
+    build: .
     environment:
       - REDIS_HOST=redis
     ports:
