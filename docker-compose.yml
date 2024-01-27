@@ -13,6 +13,7 @@ services:
   web:
     image: test-web:latest
     build: .
+    command: gunicorn -w 4 -k eventlet -b 0.0.0.0:5000 main:app
     environment:
       - REDIS_HOST=redis
     ports:
