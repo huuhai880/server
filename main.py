@@ -151,4 +151,4 @@ if __name__ == '__main__':
     background_thread = Thread(target=run_background_task)
     background_thread.start()
 
-    socketio.run(app, debug=False)
+    socketio.run(app, debug=False, host='0.0.0.0')
