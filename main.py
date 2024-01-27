@@ -147,8 +147,8 @@ def run_background_task():
     asyncio.run(background_task())
 
 if __name__ == '__main__':
-    # Start the background task in a separate thread
-    background_thread = Thread(target=run_background_task)
-    background_thread.start()
+    # # Start the background task in a separate thread
+    # background_thread = Thread(target=run_background_task)
+    # background_thread.start()
 
     socketio.run(app, debug=False)
