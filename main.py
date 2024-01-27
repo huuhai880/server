@@ -1,5 +1,5 @@
 import random
-from flask import Flask
+from flask import Flask, render_template
 from flask_socketio import SocketIO, join_room
 import time
 from threading import Thread, Lock
@@ -18,6 +18,11 @@ ROOM_NAME = "room"
 
 
 lock = Lock()
+
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @socketio.on('connect')
 def handle_connect():
@@ -151,4 +156,4 @@ if __name__ == '__main__':
     background_thread = Thread(target=run_background_task)
     background_thread.start()
 
-    socketio.run(app, debug=False, host='0.0.0.0')
+    socketio.run(app, debug=True, host='0.0.0.0')
