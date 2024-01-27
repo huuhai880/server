@@ -3,9 +3,11 @@ services:
   api_socket_app:
     build: .
     ports:
-      - 5000:5000
+      - "127.0.0.1:5000:5000"  # Bind to localhost only
     depends_on:
       - redis
+    network_mode: bridge
+
   redis:
     image: "redis:alpine"
-
+    network_mode: bridge
