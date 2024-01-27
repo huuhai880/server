@@ -1,13 +1,26 @@
-version: '3'
-services:
-  api_socket_app:
-    build: .
-    ports:
-      - "5000:5000"  # Bind to localhost only
-  #   depends_on:
-  #     - redis
-    
+## docker-compose.yml
 
-  # redis:
-  #   image: "redis:alpine"
-   
+version: "3.7"
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - test
+    init: true
+
+  web:
+    image: test-web:latest
+    build: ./web
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - 5000:5000
+    networks:
+      - test
+    depends_on:
+      - redis
+    init: true
+networks:
+  test:

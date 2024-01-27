@@ -2,3 +2,6 @@ Flask
 Flask-SocketIO
 requests
 httpx
+redis
+eventlet
+

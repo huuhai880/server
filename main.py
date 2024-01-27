@@ -8,9 +8,17 @@ import requests
 import json
 import asyncio
 import httpx
+import logging
+import os
+
 
 app = Flask(__name__)
-socketio = SocketIO(app)
+
+REDIS_HOST = os.environ.get("REDIS_HOST", "localhost")
+REDIS_URL = f"redis://{REDIS_HOST}"
+app.logger.info(f"Connecting SocketIO to redis at {REDIS_URL}")
+socketio = SocketIO(app, message_queue=REDIS_URL, logger=True, engineio_logger=True)
+
 
 # Configuration
 API_URL = 'http://159.65.129.60:9001'
