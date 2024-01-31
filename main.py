@@ -72,52 +72,95 @@ async def generate_random_array(length, count):
 
     result_array = []
 
+    array_check = []
+
     for i in range(count):
         if i == 2:  # Nếu là item thứ 3
-            # Sinh ngẫu nhiên 10 kí tự số và cách nhau mỗi 5 kí tự
-            random_string = "".join(random.choice("0123456789")
-                                    for _ in range(10))
-            # Chia chuỗi thành các đoạn có 5 kí tự và cách nhau mỗi 5 kí tự
-            random_string = ",".join([random_string[j:j+5]
-                                     for j in range(0, len(random_string), 5)])
+
+            while True:
+                # Sinh ngẫu nhiên 10 kí tự số và cách nhau mỗi 5 kí tự
+                random_string = "".join(random.choice("0123456789") for _ in range(10))
+                # Chia chuỗi thành các đoạn có 5 kí tự và cách nhau mỗi 5 kí tự
+                random_string = ",".join([random_string[j:j+5] for j in range(0, len(random_string), 5)])
+                _random_string = random_string.split(',')
+                if all(elem not in _random_string for elem in array_check):
+                    array_check.append(random_string)
+                    break
+            
+        
         elif i == 3:  # Nếu là item thứ 4
-            # Sinh ngẫu nhiên 30 kí tự số và cách nhau mỗi 5 kí tự
-            random_string = "".join(random.choice("0123456789")
-                                    for _ in range(30))
-            # Chia chuỗi thành các đoạn có 5 kí tự và cách nhau mỗi 5 kí tự
-            random_string = ",".join([random_string[j:j+5]
-                                     for j in range(0, len(random_string), 5)])
+
+            while True:
+                # Sinh ngẫu nhiên 30 kí tự số và cách nhau mỗi 5 kí tự
+                random_string = "".join(random.choice("0123456789")
+                                        for _ in range(30))
+                # Chia chuỗi thành các đoạn có 5 kí tự và cách nhau mỗi 5 kí tự
+                random_string = ",".join([random_string[j:j+5]
+                                        for j in range(0, len(random_string), 5)])
+                _random_string = random_string.split(',')
+                if all(elem not in _random_string for elem in array_check):
+                    array_check.append(random_string)
+                    break
+            
         elif i == 4:  # Nếu là item thứ 5
-            # Sinh ngẫu nhiên 12 kí tự số
-            random_string = "".join(random.choice("0123456789")
-                                    for _ in range(16))
-            random_string = ",".join([random_string[j:j+4]
-                                     for j in range(0, len(random_string), 4)])
+            while True:
+                # Sinh ngẫu nhiên 12 kí tự số
+                random_string = "".join(random.choice("0123456789")
+                                        for _ in range(16))
+                random_string = ",".join([random_string[j:j+4]
+                                        for j in range(0, len(random_string), 4)])
+                _random_string = random_string.split(',')
+                if all(elem not in _random_string for elem in array_check):
+                    array_check.append(random_string)
+                    break
+            
         elif i == 5:  # Nếu là item thứ 6
-            # Sinh ngẫu nhiên 12 kí tự số
-            random_string = "".join(random.choice("0123456789")
-                                    for _ in range(24))
-            random_string = ",".join([random_string[j:j+4]
-                                     for j in range(0, len(random_string), 4)])
+            while True:
+                # Sinh ngẫu nhiên 12 kí tự số
+                random_string = "".join(random.choice("0123456789")
+                                        for _ in range(24))
+                random_string = ",".join([random_string[j:j+4]
+                                        for j in range(0, len(random_string), 4)])
+                _random_string = random_string.split(',')
+                if all(elem not in _random_string for elem in array_check):
+                    array_check.append(random_string)
+                    break
+            
 
         elif i == 6:  # Nếu là item thứ 7
-            # Sinh ngẫu nhiên 12 kí tự số
-            random_string = "".join(random.choice("0123456789")
-                                    for _ in range(9))
-            random_string = ",".join([random_string[j:j+3]
-                                     for j in range(0, len(random_string), 3)])
+
+            while True:
+                # Sinh ngẫu nhiên 12 kí tự số
+                random_string = "".join(random.choice("0123456789")
+                                        for _ in range(9))
+                random_string = ",".join([random_string[j:j+3]
+                                        for j in range(0, len(random_string), 3)])
+                _random_string = random_string.split(',')
+                if all(elem not in _random_string for elem in array_check):
+                    array_check.append(random_string)
+                    break
+            
 
         elif i == 7:  # Nếu là item thứ 8
-            # Sinh ngẫu nhiên 12 kí tự số
-            random_string = "".join(random.choice("0123456789")
-                                    for _ in range(8))
-            random_string = ",".join([random_string[j:j+2]
-                                     for j in range(0, len(random_string), 2)])
+            while True:
+               # Sinh ngẫu nhiên 12 kí tự số
+                random_string = "".join(random.choice("0123456789")
+                                        for _ in range(8))
+                random_string = ",".join([random_string[j:j+2]
+                                        for j in range(0, len(random_string), 2)])
+                _random_string = random_string.split(',')
+                if all(elem not in _random_string for elem in array_check):
+                    array_check.append(random_string)
+                    break
+            
 
         else:
             # Sinh ngẫu nhiên 5 kí tự số
-            random_string = "".join(random.choice("0123456789")
-                                    for _ in range(length))
+            while True:
+                random_string = "".join(random.choice("0123456789") for _ in range(length))
+                if random_string not in array_check:
+                    array_check.append(random_string)
+                    break
 
         result_array.append(random_string)
 
