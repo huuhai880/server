@@ -40,13 +40,14 @@ def handle_join_room(data):
         join_room(room)
 
 
-async def handle_submit_result(ma_tin, ket_qua, openTime):
+async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
     try:
         data = {
             'ma_tin': ma_tin,
             'ket_qua': str(ket_qua),
             'openTime': str(openTime),
             'action': 'luu_kq',
+            'ma_phien_toi': NewNumberClass
         }
 
         async with httpx.AsyncClient() as client:
@@ -75,6 +76,7 @@ async def generate_random_array(length, count):
 
     CurrentNumberClass = r.get("NewNumberClass")
 
+    print(CurrentNumberClass)
     #Tạo mã phiên mới
     NewNumberClass = after_time.strftime("%Y%m%d%H%M%S")
 
@@ -179,7 +181,7 @@ async def generate_random_array(length, count):
 
     # Lưu kết quả
 
-    await handle_submit_result(CurrentNumberClass, str(result_array), after_time.strftime("%Y-%m-%d %H:%M:%S"))
+    await handle_submit_result(CurrentNumberClass, str(result_array), after_time.strftime("%Y-%m-%d %H:%M:%S"), NewNumberClass)
 
     # kiểm tra kết quả
 
