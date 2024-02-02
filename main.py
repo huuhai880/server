@@ -1,13 +1,13 @@
 import random
 from flask import Flask
 from flask_socketio import SocketIO, join_room
-import time
 from threading import Thread, Lock
 from datetime import datetime, timedelta
 import requests
-import json
 import asyncio
 import httpx
+import redis
+
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -18,6 +18,8 @@ ROOM_NAME = "room"
 
 
 lock = Lock()
+
+r = redis.Redis(host='159.65.129.60', port=6379, db=0, password='SUPER_SECRET_PASSWORD')
 
 
 @socketio.on('connect')
@@ -58,10 +60,6 @@ async def handle_submit_result(ma_tin, ket_qua, openTime):
             except Exception as err:
                 print(f"An error occurred: {err}")
 
-        # response = await requests.post(f"{API_URL}/mb/ket_qua/api_luu_ket_qua.php", data=data)
-        # response.raise_for_status()  # Raise an error for bad responses
-
-        # print("Submission successful:", response.text)
     except requests.RequestException as e:
         print(f"Error submitting result: {e}")
 
@@ -73,6 +71,12 @@ async def generate_random_array(length, count):
     result_array = []
 
     array_check = []
+
+
+    CurrentNumberClass = r.get("NewNumberClass")
+
+    #Tạo mã phiên mới
+    NewNumberClass = after_time.strftime("%Y%m%d%H%M%S")
 
     for i in range(count):
         if i == 2:  # Nếu là item thứ 3
@@ -175,9 +179,11 @@ async def generate_random_array(length, count):
 
     # Lưu kết quả
 
-    await handle_submit_result('123', str(result_array), after_time.strftime("%Y-%m-%d %H:%M:%S"))
+    await handle_submit_result(CurrentNumberClass, str(result_array), after_time.strftime("%Y-%m-%d %H:%M:%S"))
 
     # kiểm tra kết quả
+
+    r.set("NewNumberClass", NewNumberClass)
 
     return result
 
@@ -201,4 +207,4 @@ if __name__ == '__main__':
     background_thread = Thread(target=run_background_task)
     background_thread.start()
 
-    socketio.run(app, host='0.0.0.0', debug=False, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=False, allow_unsafe_werkzeug=True)
