@@ -78,7 +78,11 @@ async def generate_random_array(length, count):
     
     CurrentNumberClass = CurrentNumberClass.decode('utf-8')
     #Tạo mã phiên mới
-    NewNumberClass = after_time.strftime("%Y%m%d%H%M%S")
+    formatted_time = int(after_time.strftime("%Y")) + int(after_time.strftime("%Y%m%d")) + int(after_time.strftime("%H%M%S"))
+    # digit_sum = sum(int(digit) for digit in formatted_time)
+
+    NewNumberClass = formatted_time
+    print(NewNumberClass)
 
     for i in range(count):
         if i == 2:  # Nếu là item thứ 3
