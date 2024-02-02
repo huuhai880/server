@@ -209,4 +209,4 @@ if __name__ == '__main__':
     background_thread = Thread(target=run_background_task)
     background_thread.start()
 
-    socketio.run(app, debug=False, allow_unsafe_werkzeug=True)
+    socketio.run(app,host='0.0.0.0', debug=False, allow_unsafe_werkzeug=True)
