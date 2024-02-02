@@ -75,8 +75,8 @@ async def generate_random_array(length, count):
 
 
     CurrentNumberClass = r.get("NewNumberClass")
-
-    print(CurrentNumberClass)
+    
+    CurrentNumberClass = CurrentNumberClass.decode('utf-8')
     #Tạo mã phiên mới
     NewNumberClass = after_time.strftime("%Y%m%d%H%M%S")
 
