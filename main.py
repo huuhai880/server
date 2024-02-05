@@ -52,11 +52,10 @@ def handle_join_room(data):
 async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
     try:
 
-
         mycursor = mydb.cursor()
 
         sql = "INSERT INTO `ket_qua_trung` (`ma_phien`,`ket_qua`,`openTime`, `ma_phien_toi`) VALUES (%s,%s,%s, %s)"
-        val = (ma_tin, ket_qua, str(openTime), NewNumberClass)
+        val = (ma_tin, str(ket_qua).replace("'", '"'), str(openTime), NewNumberClass)
         mycursor.execute(sql, val)
 
         mydb.commit()
