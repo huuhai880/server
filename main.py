@@ -3,9 +3,7 @@ from flask import Flask
 from flask_socketio import SocketIO, join_room
 from threading import Thread, Lock
 from datetime import datetime, timedelta
-import requests
 import asyncio
-import httpx
 import redis
 import mysql.connector
 
@@ -60,26 +58,7 @@ async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
 
         mydb.commit()
 
-        # data = {
-        #     'ma_tin': ma_tin,
-        #     'ket_qua': str(ket_qua),
-        #     'openTime': str(openTime),
-        #     'action': 'luu_kq',
-        #     'ma_phien_toi': NewNumberClass
-        # }
-
-        # async with httpx.AsyncClient() as client:
-        #     try:
-        #         response = await client.post(f"{API_URL}/mb/ket_qua/api_luu_ket_qua.php", data=data)
-        #         response.raise_for_status()  # Raise an error for bad responses
-        #         print("Request successful!")
-        #         # Do something with the response, if needed
-        #     except httpx.HTTPStatusError as errh:
-        #         print(f"HTTP Error: {errh}")
-        #     except Exception as err:
-        #         print(f"An error occurred: {err}")
-
-    except requests.RequestException as e:
+    except mysql.connector.Error as e:
         print(f"Error submitting result: {e}")
 
 
@@ -99,7 +78,20 @@ async def generate_random_array(length, count):
     # digit_sum = sum(int(digit) for digit in formatted_time)
 
     NewNumberClass = formatted_time
-    print(NewNumberClass)
+    
+
+    #Lấy danh sách số xuất hiện nhiều nhất
+    mycursor = mydb.cursor()
+
+    mycursor.execute("CALL ten_proc()")
+
+    myresult = mycursor.fetchall()
+
+    list_without_parentheses = [item[0] for item in myresult]
+    print(list(list_without_parentheses))
+
+    list_without_parentheses = set(list(list_without_parentheses))
+
 
     for i in range(count):
         if i == 2:  # Nếu là item thứ 3
@@ -110,7 +102,8 @@ async def generate_random_array(length, count):
                 # Chia chuỗi thành các đoạn có 5 kí tự và cách nhau mỗi 5 kí tự
                 random_string = ",".join([random_string[j:j+5] for j in range(0, len(random_string), 5)])
                 _random_string = random_string.split(',')
-                if all(elem not in _random_string for elem in array_check):
+
+                if all(elem not in _random_string for elem in array_check) and  all(elem[-2:] not in list_without_parentheses for elem in _random_string):
                     array_check.append(random_string)
                     break
             
@@ -125,7 +118,7 @@ async def generate_random_array(length, count):
                 random_string = ",".join([random_string[j:j+5]
                                         for j in range(0, len(random_string), 5)])
                 _random_string = random_string.split(',')
-                if all(elem not in _random_string for elem in array_check):
+                if all(elem not in _random_string for elem in array_check) and  all(elem[-2:] not in list_without_parentheses for elem in _random_string):
                     array_check.append(random_string)
                     break
             
@@ -137,7 +130,7 @@ async def generate_random_array(length, count):
                 random_string = ",".join([random_string[j:j+4]
                                         for j in range(0, len(random_string), 4)])
                 _random_string = random_string.split(',')
-                if all(elem not in _random_string for elem in array_check):
+                if all(elem not in _random_string for elem in array_check) and  all(elem[-2:] not in list_without_parentheses for elem in _random_string):
                     array_check.append(random_string)
                     break
             
@@ -149,7 +142,7 @@ async def generate_random_array(length, count):
                 random_string = ",".join([random_string[j:j+4]
                                         for j in range(0, len(random_string), 4)])
                 _random_string = random_string.split(',')
-                if all(elem not in _random_string for elem in array_check):
+                if all(elem not in _random_string for elem in array_check) and  all(elem[-2:] not in list_without_parentheses for elem in _random_string):
                     array_check.append(random_string)
                     break
             
@@ -163,7 +156,7 @@ async def generate_random_array(length, count):
                 random_string = ",".join([random_string[j:j+3]
                                         for j in range(0, len(random_string), 3)])
                 _random_string = random_string.split(',')
-                if all(elem not in _random_string for elem in array_check):
+                if all(elem not in _random_string for elem in array_check) and  all(elem[-2:] not in list_without_parentheses for elem in _random_string):
                     array_check.append(random_string)
                     break
             
@@ -176,7 +169,7 @@ async def generate_random_array(length, count):
                 random_string = ",".join([random_string[j:j+2]
                                         for j in range(0, len(random_string), 2)])
                 _random_string = random_string.split(',')
-                if all(elem not in _random_string for elem in array_check):
+                if all(elem not in _random_string for elem in array_check) and  all(elem[-2:] not in list_without_parentheses for elem in _random_string):
                     array_check.append(random_string)
                     break
             
@@ -185,7 +178,7 @@ async def generate_random_array(length, count):
             # Sinh ngẫu nhiên 5 kí tự số
             while True:
                 random_string = "".join(random.choice("0123456789") for _ in range(length))
-                if random_string not in array_check:
+                if random_string not in array_check and  random_string[-2:] not in list_without_parentheses:
                     array_check.append(random_string)
                     break
 
