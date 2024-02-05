@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 import asyncio
 import redis
 import mysql.connector
+import httpx
+import requests
 
 
 mydb = mysql.connector.connect(
@@ -49,16 +51,26 @@ def handle_join_room(data):
 
 async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
     try:
+        data = {
+            'ma_tin': ma_tin,
+            'ket_qua': str(ket_qua),
+            'openTime': str(openTime),
+            'action': 'luu_kq',
+            'ma_phien_toi': NewNumberClass
+        }
 
-        mycursor = mydb.cursor()
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(f"{API_URL}/mb/ket_qua/api_luu_ket_qua.php", data=data)
+                response.raise_for_status()  # Raise an error for bad responses
+                print("Request successful!")
+                # Do something with the response, if needed
+            except httpx.HTTPStatusError as errh:
+                print(f"HTTP Error: {errh}")
+            except Exception as err:
+                print(f"An error occurred: {err}")
 
-        sql = "INSERT INTO `ket_qua_trung` (`ma_phien`,`ket_qua`,`openTime`, `ma_phien_toi`) VALUES (%s,%s,%s, %s)"
-        val = (ma_tin, str(ket_qua).replace("'", '"'), str(openTime), NewNumberClass)
-        mycursor.execute(sql, val)
-
-        mydb.commit()
-
-    except mysql.connector.Error as e:
+    except requests.RequestException as e:
         print(f"Error submitting result: {e}")
 
 
