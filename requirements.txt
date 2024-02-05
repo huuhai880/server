@@ -4,3 +4,4 @@ requests
 httpx
 gunicorn
 redis
+mysql-connector-python

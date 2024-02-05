@@ -7,6 +7,15 @@ import requests
 import asyncio
 import httpx
 import redis
+import mysql.connector
+
+
+mydb = mysql.connector.connect(
+  host="159.65.129.60",
+  user="root",
+  password="4Jmnidyl@bot",
+  database="dp_app"
+)
 
 
 app = Flask(__name__)
@@ -42,24 +51,34 @@ def handle_join_room(data):
 
 async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
     try:
-        data = {
-            'ma_tin': ma_tin,
-            'ket_qua': str(ket_qua),
-            'openTime': str(openTime),
-            'action': 'luu_kq',
-            'ma_phien_toi': NewNumberClass
-        }
 
-        async with httpx.AsyncClient() as client:
-            try:
-                response = await client.post(f"{API_URL}/mb/ket_qua/api_luu_ket_qua.php", data=data)
-                response.raise_for_status()  # Raise an error for bad responses
-                print("Request successful!")
-                # Do something with the response, if needed
-            except httpx.HTTPStatusError as errh:
-                print(f"HTTP Error: {errh}")
-            except Exception as err:
-                print(f"An error occurred: {err}")
+
+        mycursor = mydb.cursor()
+
+        sql = "INSERT INTO `ket_qua_trung` (`ma_phien`,`ket_qua`,`openTime`, `ma_phien_toi`) VALUES (%s,%s,%s, %s)"
+        val = (ma_tin, str(ket_qua), str(openTime), NewNumberClass)
+        mycursor.execute(sql, val)
+
+        mydb.commit()
+
+        # data = {
+        #     'ma_tin': ma_tin,
+        #     'ket_qua': str(ket_qua),
+        #     'openTime': str(openTime),
+        #     'action': 'luu_kq',
+        #     'ma_phien_toi': NewNumberClass
+        # }
+
+        # async with httpx.AsyncClient() as client:
+        #     try:
+        #         response = await client.post(f"{API_URL}/mb/ket_qua/api_luu_ket_qua.php", data=data)
+        #         response.raise_for_status()  # Raise an error for bad responses
+        #         print("Request successful!")
+        #         # Do something with the response, if needed
+        #     except httpx.HTTPStatusError as errh:
+        #         print(f"HTTP Error: {errh}")
+        #     except Exception as err:
+        #         print(f"An error occurred: {err}")
 
     except requests.RequestException as e:
         print(f"Error submitting result: {e}")
@@ -73,12 +92,11 @@ async def generate_random_array(length, count):
 
     array_check = []
 
-
     CurrentNumberClass = r.get("NewNumberClass")
     
     CurrentNumberClass = CurrentNumberClass.decode('utf-8')
     #Tạo mã phiên mới
-    formatted_time = int(after_time.strftime("%Y")) + int(after_time.strftime("%Y%m%d")) + int(after_time.strftime("%H%M%S"))
+    formatted_time = int(after_time.strftime("%Y%m%d")) + int(after_time.strftime("%H%M%S"))
     # digit_sum = sum(int(digit) for digit in formatted_time)
 
     NewNumberClass = formatted_time
