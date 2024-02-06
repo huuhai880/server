@@ -117,7 +117,7 @@ async def generate_random_array(length, count):
     formatted_time = int(after_time.strftime("%Y%m%d")) + int(after_time.strftime("%H%M%S"))
     # digit_sum = sum(int(digit) for digit in formatted_time)
 
-    NewNumberClass = formatted_time
+    NewNumberClass = int(CurrentNumberClass) + 1
     
     
 
