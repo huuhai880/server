@@ -53,6 +53,13 @@ def set_data_redis():
     socketio.emit('change_setting_config', data, room=ROOM_NAME)
     return jsonify({'message': 'Data set successfully', "success": 1})
 
+
+@app.route('/set_setting_solutions', methods=['POST'])
+def set_data_redis():
+    data = request.json.get('newData')
+    redis_client.set('CONFIG_SOLUTIONS', data)
+    return jsonify({'message': 'Data set successfully', "success": 1})
+
 async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
     try:
 
