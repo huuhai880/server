@@ -48,9 +48,10 @@ def get_data_redis():
 @app.route('/set_data_setting', methods=['POST'])
 def set_data_redis():
     data = request.json.get('newData')
+    print(data)
     redis_client.set('SETTING_CONFIG', data)
     socketio.emit('change_setting_config', data, room=ROOM_NAME)
-    return jsonify({'message': 'Data set successfully'})
+    return jsonify({'message': 'Data set successfully', "success": 1})
 
 async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
     try:
@@ -251,3 +252,4 @@ if __name__ == '__main__':
     background_thread.start()
 
     socketio.run(app,host='0.0.0.0', debug=False, allow_unsafe_werkzeug=True)
+    # socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
