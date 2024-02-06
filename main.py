@@ -55,7 +55,7 @@ def set_data_redis():
 
 
 @app.route('/set_setting_solutions', methods=['POST'])
-def set_data_redis():
+def set_data_solutions():
     data = request.json.get('newData')
     redis_client.set('CONFIG_SOLUTIONS', data)
     return jsonify({'message': 'Data set successfully', "success": 1})
