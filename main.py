@@ -103,15 +103,15 @@ async def generate_random_array(length, count):
     
     list_without_parentheses =[]
     #Lấy danh sách số xuất hiện nhiều nhất
-    mycursor = mydb.cursor()
+    # mycursor = mydb.cursor()
 
-    mycursor.execute("CALL ten_proc()")
+    # mycursor.execute("CALL ten_proc()")
 
-    myresult = mycursor.fetchall()
+    # myresult = mycursor.fetchall()
 
-    list_without_parentheses = [item[0] for item in myresult]
+    # list_without_parentheses = [item[0] for item in myresult]
    
-    list_without_parentheses = set(list(list_without_parentheses))
+    # list_without_parentheses = set(list(list_without_parentheses))
 
 
     for i in range(count):
