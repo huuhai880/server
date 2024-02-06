@@ -105,18 +105,19 @@ async def generate_random_array(length, count):
 
     #Lấy danh sách số xuất hiện nhiều nhất
     mycursor = mydb.cursor()
+    myresult = []
 
     if config_solutions =='LIMITTOP10':
         mycursor.execute("CALL ten_proc()")
+        myresult = mycursor.fetchall()
 
     if config_solutions =='LIMITALL':
         mycursor.execute("CALL ten_proc_all()")
-
-    myresult = mycursor.fetchall()
+        myresult = mycursor.fetchall()
 
     list_without_parentheses = [item[0] for item in myresult]
    
-    list_without_parentheses = set(list(list_without_parentheses))
+    list_without_parentheses = set(list_without_parentheses)
 
     print(list_without_parentheses)
 
