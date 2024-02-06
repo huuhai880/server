@@ -1,5 +1,5 @@
 import random
-from flask import Flask
+from flask import Flask, jsonify, request
 from flask_socketio import SocketIO, join_room
 from threading import Thread, Lock
 from datetime import datetime, timedelta
@@ -8,10 +8,6 @@ import redis
 import mysql.connector
 import httpx
 import requests
-
-
-
-
 
 
 app = Flask(__name__)
@@ -24,7 +20,7 @@ ROOM_NAME = "room"
 
 lock = Lock()
 
-r = redis.Redis(host='159.65.129.60', port=6379, db=0, password='SUPER_SECRET_PASSWORD')
+redis_client = redis.Redis(host='159.65.129.60', port=6379, db=0, password='SUPER_SECRET_PASSWORD')
 
 
 @socketio.on('connect')
@@ -44,6 +40,17 @@ def handle_join_room(data):
         print(f'Client joining room: {room}')
         join_room(room)
 
+@app.route('/get_data_setting', methods=['GET'])
+def get_data_redis():
+    data = redis_client.get('SETTING_CONFIG')
+    return jsonify({'data': data.decode('utf-8') if data else None})
+
+@app.route('/set_data_setting', methods=['POST'])
+def set_data_redis():
+    data = request.json.get('newData')
+    redis_client.set('SETTING_CONFIG', data)
+    socketio.emit('change_setting_config', data, room=ROOM_NAME)
+    return jsonify({'message': 'Data set successfully'})
 
 async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
     try:
@@ -102,7 +109,7 @@ async def generate_random_array(length, count):
 
     array_check = []
 
-    CurrentNumberClass = r.get("NewNumberClass")
+    CurrentNumberClass = redis_client.get("NewNumberClass")
     
     CurrentNumberClass = CurrentNumberClass.decode('utf-8')
     #Tạo mã phiên mới
@@ -219,7 +226,7 @@ async def generate_random_array(length, count):
 
     # kiểm tra kết quả
 
-    r.set("NewNumberClass", NewNumberClass)
+    redis_client.set("NewNumberClass", NewNumberClass)
 
     return result
 
