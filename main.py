@@ -10,12 +10,8 @@ import httpx
 import requests
 
 
-mydb = mysql.connector.connect(
-  host="159.65.129.60",
-  user="root",
-  password="4Jmnidyl@bot",
-  database="dp_app"
-)
+
+
 
 
 app = Flask(__name__)
@@ -52,15 +48,6 @@ def handle_join_room(data):
 async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
     try:
 
-
-        # mycursor = mydb.cursor()
-
-        # sql = "INSERT INTO `ket_qua_trung` (`ma_phien`,`ket_qua`,`openTime`, `ma_phien_toi`) VALUES (%s,%s,%s, %s)"
-        # val = (ma_tin, ket_qua, str(openTime), NewNumberClass)
-        # mycursor.execute(sql, val)
-
-        # mydb.commit()
-
         data = {
             'ma_tin': ma_tin,
             'ket_qua': str(ket_qua),
@@ -85,6 +72,29 @@ async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
 
 
 async def generate_random_array(length, count):
+
+    mydb = mysql.connector.connect(
+            host="159.65.129.60",
+            user="root",
+            password="4Jmnidyl@bot",
+            database="dp_app"
+    )
+    
+    list_without_parentheses =[]
+    #Lấy danh sách số xuất hiện nhiều nhất
+    mycursor = mydb.cursor()
+
+    mycursor.execute("CALL ten_proc()")
+
+    myresult = mycursor.fetchall()
+
+    list_without_parentheses = [item[0] for item in myresult]
+   
+    list_without_parentheses = set(list(list_without_parentheses))
+
+    print(list_without_parentheses)
+
+
     current_time = datetime.now()
     after_time = current_time + timedelta(seconds=75)
 
@@ -101,18 +111,7 @@ async def generate_random_array(length, count):
 
     NewNumberClass = formatted_time
     
-    list_without_parentheses =[]
-    #Lấy danh sách số xuất hiện nhiều nhất
-    # mycursor = mydb.cursor()
-
-    # mycursor.execute("CALL ten_proc()")
-
-    # myresult = mycursor.fetchall()
-
-    # list_without_parentheses = [item[0] for item in myresult]
-   
-    # list_without_parentheses = set(list(list_without_parentheses))
-
+    
 
     for i in range(count):
         if i == 2:  # Nếu là item thứ 3
