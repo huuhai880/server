@@ -53,6 +53,10 @@ def set_data_redis():
     socketio.emit('change_setting_config', data, room=ROOM_NAME)
     return jsonify({'message': 'Data set successfully', "success": 1})
 
+@app.route('/get_setting_solutions', methods=['GET'])
+def get_data_redis():
+    data = redis_client.get('CONFIG_SOLUTIONS')
+    return jsonify({'data': data.decode('utf-8') if data else None})
 
 @app.route('/set_setting_solutions', methods=['POST'])
 def set_data_solutions():
