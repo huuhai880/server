@@ -100,10 +100,17 @@ async def generate_random_array(length, count):
     )
     
     list_without_parentheses =[]
+
+    config_solutions = redis_client.get("CONFIG_SOLUTIONS")
+
     #Lấy danh sách số xuất hiện nhiều nhất
     mycursor = mydb.cursor()
 
-    mycursor.execute("CALL ten_proc()")
+    if config_solutions =='LIMITTOP10':
+        mycursor.execute("CALL ten_proc()")
+
+    if config_solutions =='LIMITALL':
+        mycursor.execute("CALL ten_proc_all()")
 
     myresult = mycursor.fetchall()
 
@@ -112,7 +119,6 @@ async def generate_random_array(length, count):
     list_without_parentheses = set(list(list_without_parentheses))
 
     print(list_without_parentheses)
-
 
     current_time = datetime.now()
     after_time = current_time + timedelta(seconds=75)
