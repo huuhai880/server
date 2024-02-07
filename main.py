@@ -101,7 +101,7 @@ async def generate_random_array(length, count):
     
     list_without_parentheses =[]
 
-    config_solutions = redis_client.get("CONFIG_SOLUTIONS")
+    config_solutions = redis_client.get("CONFIG_SOLUTIONS").decode('utf-8')
 
     #Lấy danh sách số xuất hiện nhiều nhất
     mycursor = mydb.cursor()
@@ -117,10 +117,6 @@ async def generate_random_array(length, count):
 
     list_without_parentheses = [item[0] for item in myresult]
    
-    list_without_parentheses = set(list_without_parentheses)
-
-    print(list_without_parentheses)
-
     current_time = datetime.now()
     after_time = current_time + timedelta(seconds=75)
 
@@ -148,6 +144,8 @@ async def generate_random_array(length, count):
                 # Chia chuỗi thành các đoạn có 5 kí tự và cách nhau mỗi 5 kí tự
                 random_string = ",".join([random_string[j:j+5] for j in range(0, len(random_string), 5)])
                 _random_string = random_string.split(',')
+
+                print(all(elem[-2:] not in list_without_parentheses for elem in _random_string))
 
                 if all(elem not in _random_string for elem in array_check) and  all(elem[-2:] not in list_without_parentheses for elem in _random_string):
                     array_check.append(random_string)
