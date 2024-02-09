@@ -14,13 +14,13 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 
 # Configuration
-API_URL = 'http://159.65.129.60:9001'
+API_URL = 'http://146.190.49.148:9001'
 ROOM_NAME = "room"
 
 
 lock = Lock()
 
-redis_client = redis.Redis(host='159.65.129.60', port=6379, db=0, password='SUPER_SECRET_PASSWORD')
+redis_client = redis.Redis(host='146.190.49.148', port=6379, db=0, password='SUPER_SECRET_PASSWORD')
 
 
 @socketio.on('connect')
