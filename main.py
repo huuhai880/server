@@ -93,7 +93,7 @@ async def handle_submit_result(ma_tin, ket_qua, openTime, NewNumberClass):
 async def generate_random_array(length, count):
 
     mydb = mysql.connector.connect(
-            host="159.65.129.60",
+            host="146.190.49.148",
             user="root",
             password="4Jmnidyl@bot",
             database="dp_app"
